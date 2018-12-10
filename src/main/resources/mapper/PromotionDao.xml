@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzti.share.dao.PromotionDao">
+	<!-- 目的：为dao接口方法提供sql语句配置 -->	
+	<insert id="addPromotion">
+		<!-- ignore 主键冲突，报错 -->
+		INSERT ignore INTO promotion VALUES (NULL , #{ip}, #{userId}, #{sum})
+	</insert>
+	
+	<select id="getAll" resultType="Promotion">
+		SELECT * FROM promotion
+	</select>
+	
+	<select id="getPromotionByUser" resultType="Promotion">
+		SELECT * FROM promotion WHERE user_id = #{userId}
+	</select>
+	
+	<update id="updateSum">
+		UPDATE promotion SET sum = #{sum} WHERE user_id = #{userId}
+	</update>
+</mapper>

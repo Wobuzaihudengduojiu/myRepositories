@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzti.share.dao.Tea_paperDao">
+	<!-- 目的：为dao接口方法提供sql语句配置 -->	
+	<insert id="addTea_paper" parameterType="Tea_paper" useGeneratedKeys="true" keyProperty="id">
+		<!-- ignore 主键冲突，报错 -->
+		INSERT ignore INTO tea_paper VALUES (NULL , #{tpName}, #{subjectId},
+		#{userId}, #{schoolId}, #{questionId}, #{queScore}, #{score}, #{openTime})
+	</insert>
+	
+	<select id="getPaperById" resultType="Tea_paper">
+		SELECT * FROM tea_paper WHERE id = #{id}
+	</select>
+	
+	<select id="getPaper" resultType="Tea_paper">
+		SELECT * FROM tea_paper WHERE school_id = #{schoolId} and subject_id = #{subjectId}
+	</select>
+	
+	<select id="getAll" resultType="com.zzti.share.dto.PaperInfo">
+		select p.id, p.tp_name, p.score, su.subject_name, u.username, sc.school_name
+       	from tea_paper p inner join subject su inner join user u inner join school sc       
+       	where su.id = p.subject_id and u.id = p.user_id and sc.id = p.school_id;
+	</select>
+	
+	<select id="getPaperByUser" resultType="com.zzti.share.dto.PaperInfo">
+		select p.id, p.tp_name, p.score, su.subject_name, u.username, sc.school_name
+       	from tea_paper p inner join subject su inner join user u inner join school sc       
+       	where p.user_id = #{userId} and su.id = p.subject_id and u.id = p.user_id and sc.id = p.school_id;
+	</select>
+	
+	<select id="getPaperByName" resultType="com.zzti.share.dto.PaperInfo" parameterType="String">
+		select p.id, p.tp_name, p.score, su.subject_name, u.username, sc.school_name
+       	from tea_paper p inner join subject su inner join user u inner join school sc       
+       	where p.tp_name LIKE '%${name}%' and su.id = p.subject_id and u.id = p.user_id and sc.id = p.school_id;
+	</select>
+</mapper>

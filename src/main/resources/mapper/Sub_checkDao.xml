@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzti.share.dao.Sub_checkDao">
+	<!-- 目的：为dao接口方法提供sql语句配置 -->	
+	<insert id="addSub_check">
+		<!-- ignore 主键冲突，报错 -->
+		INSERT ignore INTO sub_check VALUES (NULL ,#{userId}, #{subjectId}, #{ischeck})
+	</insert>
+	
+	<select id="getSubBySubject" resultType="com.zzti.share.dto.SubjectCheck">
+		select s.subject_name, u.username, sc.ischeck, sc.subject_id
+       	from sub_check sc inner join subject s inner join user u       
+       	where sc.subject_id = #{subjectId} and s.id = sc.subject_id and u.id = sc.user_id; 
+	</select>
+</mapper>

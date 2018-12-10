@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzti.share.dao.SubjectDao">
+	<!-- 目的：为dao接口方法提供sql语句配置 -->	
+	<insert id="addSubject">
+		<!-- ignore 主键冲突，报错 -->
+		INSERT ignore INTO subject(subject_name,profession_id,user_id) VALUES (#{subjectName}, #{professionId}, #{userId})
+	</insert>
+	
+	<update id="updateCheck">
+		UPDATE subject SET ischeck = 1, admin_id = #{adminId} WHERE id = #{id}
+	</update>
+	
+	<select id="getAll" resultType="Subject">
+		SELECT * FROM subject WHERE ischeck = 1
+	</select>
+	
+	<select id="getSubejctByProfession" resultType="Subject">
+		SELECT * FROM subject WHERE profession_id = #{professionId} and ischeck = 1
+	</select>
+	
+	<select id="getSubjectById" resultType="com.zzti.share.dto.SubjectInfo">
+		select s.id, s.subject_name, p.profession_name, u.username
+       	from subject s inner join profession p inner join user u       
+       	where s.id = #{id} and p.id = s.profession_id and u.id = s.user_id;
+	</select>
+	
+	<select id="getSubjectByName" resultType="Subject">
+		SELECT * FROM subject WHERE subject_name = #{subjectName}
+	</select>
+	
+	<select id="getNoCheck" resultType="com.zzti.share.dto.SubjectInfo">
+		select s.id, s.subject_name, p.profession_name, u.username
+       	from subject s inner join profession p inner join user u       
+       	where ischeck = 0 and p.id = s.profession_id and u.id = s.user_id;
+	</select>
+	
+	<select id="getNoCheckByName" resultType="com.zzti.share.dto.SubjectInfo">
+		select s.id, s.subject_name, p.profession_name, u.username
+       	from subject s inner join profession p inner join user u       
+       	where ischeck = 0 and s.subject_name LIKE '%${name}%' and p.id = s.profession_id and u.id = s.user_id;
+	</select>
+	
+	<select id="getAllInfo" resultType="com.zzti.share.dto.SubjectInfo">
+		select s.id, s.subject_name, p.profession_name, u.username
+       	from subject s inner join profession p inner join user u       
+       	where ischeck = 1 and p.id = s.profession_id and u.id = s.user_id;
+	</select>
+	
+	<select id="getSubjectInfoByName" resultType="com.zzti.share.dto.SubjectInfo">
+		select s.id, s.subject_name, p.profession_name, u.username
+       	from subject s inner join profession p inner join user u       
+       	where ischeck = 1 and s.subject_name LIKE '%${name}%' and p.id = s.profession_id and u.id = s.user_id;
+	</select>
+</mapper>

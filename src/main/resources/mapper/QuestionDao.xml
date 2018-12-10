@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzti.share.dao.QuestionDao">
+	<!-- 目的：为dao接口方法提供sql语句配置 -->	
+	<insert id="addQuestion">
+		<!-- ignore 主键冲突，报错 -->
+		INSERT ignore INTO question(queId,title,value,knowledge_id,type_id,subject_id,user_id,lv) 
+		VALUES (#{queId}, #{title}, #{value}, #{knowledgeId}, 
+		#{typeId}, #{subjectId}, #{userId}, #{lv})
+	</insert>
+	
+	<select id="getQuestionByQueId" resultType="Question">
+		SELECT * FROM question WHERE queId = #{queId} and title != '题目';
+	</select>
+	
+	<select id="getQuestion" resultType="Question">
+		SELECT * FROM question WHERE queId = #{queId};
+	</select>
+	
+	<select id="getLast" resultType="Question">
+		select * from question order by id desc LIMIT 1;
+	</select>
+	
+	<select id="getAll" resultType="com.zzti.share.dto.QuestionInfo">
+		select q.queId, q.value, q.lv, s.subject_name, k.knowledge_name, qt.qt_name, u.username 
+		from question q inner join subject s inner join knowledge k 
+		inner join que_type qt inner join user u 
+		where title = '题目' and s.Id = q.subject_id and k.Id = q.knowledge_id 
+		and qt.Id = q.type_id and u.id = q.user_id;
+	</select>
+	
+	<select id="getQuestionInfoByQueId" resultType="com.zzti.share.dto.QuestionInfo">
+		select q.queId, q.value, q.lv, s.subject_name, k.knowledge_name, qt.qt_name, u.username 
+		from question q inner join subject s inner join knowledge k 
+		inner join que_type qt inner join user u 
+		where title = '题目' and queId = #{queId} and s.Id = q.subject_id and k.Id = q.knowledge_id 
+		and qt.Id = q.type_id and u.id = q.user_id;
+	</select>
+	
+	<select id="getQueId" resultType="Integer">
+		SELECT distinct queId FROM question where subject_id = #{subjectId} and type_id in (${typeId}) 
+		and knowledge_id in (${knowledgeId}) and lv in (${lv})
+	</select>
+	
+	<select id="getQuestionByName" resultType="com.zzti.share.dto.QuestionInfo">
+		select q.queId, q.value, q.lv, s.subject_name, k.knowledge_name, qt.qt_name, u.username 
+		from question q inner join subject s inner join knowledge k 
+		inner join que_type qt inner join user u 
+		where title = '题目' and value LIKE '%${name}%' and s.Id = q.subject_id and k.Id = q.knowledge_id 
+		and qt.Id = q.type_id and u.id = q.user_id;
+	</select>
+</mapper>
